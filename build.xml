@@ -1,0 +1,66 @@
+<?xml version="1.0" ?>
+<project name="Project1: Applet project" default="jar" basedir=".">
+    <description>Builds, tests, and runs the project Project1.</description>
+    <property name="User" value="YishanTsai" />
+    <property name="Project" value="Project 01: YiShanTsai" />
+    <property name="projectdir" location="." /> 
+    <property name="src" location="src" /> 
+    <property name="build" location="build" /> 
+    <property name="dist" location="dist" /> 
+    
+    <target name="init">
+        <tstamp />
+        <mkdir dir="${build}" />
+        <mkdir dir="${dist}" />
+    </target>
+    
+    <target name="compile" depends="init" description="compile the source">
+        <javac srcdir="${src}" destdir="${build}" includeantruntime="false"/> 
+    </target>
+    
+    <target name="jar" depends="compile" description="Creates the client jar file">
+        <jar destfile="${dist}/SCS.jar">
+            <fileset dir="${build}">
+                <patternset>
+                    <include name="ece155b/**" />
+                    <exclude name="ece155b/test/**"/>
+                </patternset>
+            </fileset>
+        </jar>
+    </target>
+    
+    <target name="run" depends="jar">
+        <exec executable="${projectdir}/RunApplet.bat" />
+    </target>
+    
+    <target name="demoXml" depends="compile">
+        <java classname="ece155b.test.DemoXML" dir="${projectdir}">
+            <arg value="${projectdir}/test.xml"/>
+            <classpath>
+                <pathelement location="${build}"/>
+                <pathelement path="${java.class.path}"/>
+            </classpath>
+        </java>
+    </target>
+    
+    <target name="clean" >
+        <delete dir="${build}" />
+        <delete file="${dist}/SCS.jar" />
+    </target>
+    
+    <target name="submission" description="prepare for submission"> 
+        <tar destfile="${projectdir}/Prj1-${User}.tar">
+            <tarfileset dir=".">
+                <include name="**"/>
+            </tarfileset>
+        </tar>
+        
+        <echo message="Congratulations.." />
+        <echo message="If you have extra files to include, you need to modify patternset, 
+        include your additional files" />
+        <echo message="Note: Test your submission on another PC or different directory,
+        before you submit to the elearning website with subject '${Project} : ${User}'" />
+        
+    </target>
+    
+</project>
